@@ -1,3 +1,7 @@
-logs/*
-work/*
+/logs/**
+!/logs/**/
+!/logs/**/.gitkeep
+/work/**
+!/work/**/
+!/work/**/.gitkeep
 .env
