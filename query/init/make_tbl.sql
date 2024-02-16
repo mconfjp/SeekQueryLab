@@ -224,7 +224,7 @@ PRIMARY KEY (`review_id`),
         REFERENCES works(`work_id`)
         ON DELETE RESTRICT
         ON UPDATE RESTRICT,
-    FOREIGN KEY (`user_id`)
+    FOREIGN KEY (`review_from`)
         REFERENCES users(`user_id`)
         ON DELETE RESTRICT
         ON UPDATE RESTRICT

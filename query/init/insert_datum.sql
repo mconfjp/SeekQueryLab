@@ -61,6 +61,7 @@ INSERT INTO users (user_id) SELECT 0 FROM users;
 INSERT INTO users (user_id) SELECT 0 FROM users;
 INSERT INTO users (user_id) SELECT 0 FROM users;
 INSERT INTO users (user_id) SELECT 0 FROM users;
+INSERT INTO users (user_id) SELECT 0 FROM users;
 
 -- ランダムに更新
 UPDATE
@@ -68,7 +69,7 @@ UPDATE
 SET 
     pen_name = SUBSTRING(MD5(RAND()) FROM 1 FOR FLOOR(RAND() * 10)), 
     hashed_password = SUBSTRING(MD5(RAND()) FROM 1 FOR FLOOR(RAND() * 32)),
-    created_at = ADDTIME(CONCAT_WS(' ','2020-01-01' + INTERVAL RAND() * 180 DAY, '00:00:00'), SEC_TO_TIME(FLOOR(0 + (RAND() * 86401)))),,
+    created_at = ADDTIME(CONCAT_WS(' ','2020-01-01' + INTERVAL RAND() * 180 DAY, '00:00:00'), SEC_TO_TIME(FLOOR(0 + (RAND() * 86401)))),
     updated_at = NULL,
     deleted_at = NULL,
     create_user_id = 1,
@@ -212,7 +213,7 @@ LIMIT
 
 
 -- reviews
-INSERT INTO reviews (work_id, user_id,star_rate, review_comment, created_at, create_user_id)
+INSERT INTO reviews (work_id, review_from, star_rate, review_comment, created_at, create_user_id)
 SELECT
     works.work_id,
     users.user_id,
