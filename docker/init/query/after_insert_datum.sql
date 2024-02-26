@@ -98,7 +98,7 @@ INSERT INTO browsing_histories (episode_id, user_id, created_at, create_user_id)
 SELECT
     ep.episode_id,
     us.user_id,
-    ADDTIME(CONCAT_WS(' ','2023-06-01' + INTERVAL RAND() * 180 DAY, '00:00:00'), SEC_TO_TIME(FLOOR(0 + (RAND() * 86401)))),
+    ADDTIME(CONCAT_WS(' ','2024-02-01' + INTERVAL RAND() * 180 DAY, '00:00:00'), SEC_TO_TIME(FLOOR(0 + (RAND() * 86401)))),
     1
 FROM
     (
@@ -125,4 +125,4 @@ FROM
 ORDER BY 
     RAND()
 LIMIT 
-    400000;
+    4000000;

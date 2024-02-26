@@ -279,6 +279,8 @@ SELECT user_id, COUNT(notification_id) AS notification_count
 FROM notifications
 GROUP BY user_id;
 
+-- 若干重ためのクエリ
+
 /*
 31. 人気の作品ランキングクエリ:
 */
@@ -296,10 +298,11 @@ LIMIT 10; -- 上位10作品を取得
 */
 SELECT w.title, COUNT(b.episode_id) AS view_count
 FROM works w
-JOIN episodes e ON w.work_id = e.work_id
+JOIN chapters c ON w.work_id = c.work_id
+JOIN episodes e ON c.chapter_id = e.chapter_id
 JOIN browsing_histories b ON e.episode_id = b.episode_id
 WHERE w.deleted_at IS NULL
-AND b.created_at >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY) -- 直近7日間の閲覧履歴を対象にする
+AND b.created_at >= DATE_SUB(CURRENT_DATE(), INTERVAL 170 DAY) -- 直近7日間の閲覧履歴を対象にする
 GROUP BY w.work_id
 ORDER BY view_count DESC
 LIMIT 10; -- 上位10作品を取得
@@ -320,12 +323,13 @@ LIMIT 10; -- 上位10ユーザーを取得
 */
 
 SELECT c.category_name, w.title, COUNT(b.episode_id) AS view_count
-FROM categories c
+FROM ms_categories c
 JOIN works w ON c.category_id = w.category_id
-JOIN episodes e ON w.work_id = e.work_id
+JOIN chapters ch ON w.work_id = ch.work_id
+JOIN episodes e ON ch.chapter_id = e.chapter_id
 JOIN browsing_histories b ON e.episode_id = b.episode_id
 WHERE w.deleted_at IS NULL
-AND b.created_at >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY) -- 直近30日間の閲覧履歴を対象にする
+AND b.created_at >= DATE_SUB(CURRENT_DATE(), INTERVAL 380 DAY) -- 直近30日間の閲覧履歴を対象にする
 GROUP BY c.category_id, w.work_id
 ORDER BY view_count DESC
 LIMIT 10; -- 各カテゴリごとに上位10作品を取得
