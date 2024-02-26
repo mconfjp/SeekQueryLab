@@ -1,15 +1,13 @@
 #!/bin/bash
 
-source ./../../.env
+# queryディレクトリ内のSQLファイルへの絶対パスを指定
+# QUERY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/query"
+QUERY_DIR="$(cd $(dirname $0); pwd)/query"
 
-echo "init database start"
-mysql -u root $DB_NAME -p <  ./query/init/make_tbl.sql
-mysql -u root $DB_NAME -p <  ./query/init/pre_insert_datum.sql
-
+# SQLファイルを実行
+mysql -u $MYSQL_USER $MYSQL_DATABASE -p$MYSQL_PASSWORD < $QUERY_DIR/make_tbl.sql
+mysql -u $MYSQL_USER $MYSQL_DATABASE -p$MYSQL_PASSWORD < $QUERY_DIR/pre_insert_datum.sql
 for ((i=1; i<=10; i++)); do
-    mysql -u root $DB_NAME -p <  ./query/init/insert_datum.sql
+    mysql -u $MYSQL_USER  $MYSQL_DATABASE -p$MYSQL_PASSWORD < $QUERY_DIR/insert_datum.sql
 done
-
-mysql -u root $DB_NAME -p <  ./query/init/after_insert_datum.sql
-
-echo "init database DONE!"
+mysql -u $MYSQL_USER  $MYSQL_DATABASE -p$MYSQL_PASSWORD < $QUERY_DIR/after_insert_datum.sql
