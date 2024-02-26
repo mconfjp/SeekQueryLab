@@ -12,3 +12,4 @@ if [ ! -f work/request.sql ]; then
     echo "created work/request.sql. tune up it!"
 else
     echo "work/request.sql already exists."
+fi
