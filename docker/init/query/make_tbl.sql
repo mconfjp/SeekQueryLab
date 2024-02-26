@@ -203,7 +203,12 @@ PRIMARY KEY (`comment_id`),
     FOREIGN KEY (`reply_to_id`)
         REFERENCES comments(`comment_id`)
         ON DELETE RESTRICT
+        ON UPDATE RESTRICT,
+    FOREIGN KEY (`comment_from`)
+        REFERENCES users(`user_id`)
+        ON DELETE RESTRICT
         ON UPDATE RESTRICT
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 

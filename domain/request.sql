@@ -279,11 +279,201 @@ SELECT user_id, COUNT(notification_id) AS notification_count
 FROM notifications
 GROUP BY user_id;
 
+/*
+31. 人気の作品ランキングクエリ:
+*/
+
+SELECT w.title, AVG(r.star_rate) AS average_rating
+FROM works w
+JOIN reviews r ON w.work_id = r.work_id
+WHERE w.deleted_at IS NULL
+GROUP BY w.work_id
+ORDER BY average_rating DESC
+LIMIT 10; -- 上位10作品を取得
+
+/*
+32. トレンド作品ランキングクエリ (最近人気が急上昇している作品):
+*/
+SELECT w.title, COUNT(b.episode_id) AS view_count
+FROM works w
+JOIN episodes e ON w.work_id = e.work_id
+JOIN browsing_histories b ON e.episode_id = b.episode_id
+WHERE w.deleted_at IS NULL
+AND b.created_at >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY) -- 直近7日間の閲覧履歴を対象にする
+GROUP BY w.work_id
+ORDER BY view_count DESC
+LIMIT 10; -- 上位10作品を取得
+
+/*
+33. ユーザーごとのお気に入りランキングクエリ:
+*/
+
+SELECT u.pen_name, COUNT(f.work_id) AS favorite_count
+FROM users u
+JOIN favorites f ON u.user_id = f.user_id
+GROUP BY u.user_id
+ORDER BY favorite_count DESC
+LIMIT 10; -- 上位10ユーザーを取得
+
+/*
+34. カテゴリ別人気作品ランキングクエリ:
+*/
+
+SELECT c.category_name, w.title, COUNT(b.episode_id) AS view_count
+FROM categories c
+JOIN works w ON c.category_id = w.category_id
+JOIN episodes e ON w.work_id = e.work_id
+JOIN browsing_histories b ON e.episode_id = b.episode_id
+WHERE w.deleted_at IS NULL
+AND b.created_at >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY) -- 直近30日間の閲覧履歴を対象にする
+GROUP BY c.category_id, w.work_id
+ORDER BY view_count DESC
+LIMIT 10; -- 各カテゴリごとに上位10作品を取得
+
+/*
+35. 人気タグのランキング
+サイト上で最も人気のあるタグをランキング化し、ユーザーが人気のあるトピックやジャンルを把握できるようにします。
+*/
+
+SELECT t.tag_name, COUNT(wt.work_id) AS tag_count
+FROM ms_tags t
+JOIN work_tags wt ON t.tag_id = wt.tag_id
+GROUP BY t.tag_id
+ORDER BY tag_count DESC
+LIMIT 10; -- 上位10タグを取得
+
+
+/*
+36. アクティブユーザーの取得
+最近にアクティブなユーザーを抽出し、サイト上での活動が活発なユーザーを特定します。活動の多いユーザーはコミュニティにおいて重要な存在となる場合があります。
+*/
+
+SELECT u.pen_name, COUNT(DISTINCT w.work_id) AS active_works_count
+FROM users u
+JOIN works w ON u.user_id = w.user_id
+JOIN episodes e ON w.work_id = e.work_id
+WHERE e.created_at >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY) -- 直近30日間に新しいエピソードを公開したユーザーを対象にする
+GROUP BY u.user_id
+ORDER BY active_works_count DESC
+LIMIT 10; -- 上位10アクティブユーザーを取得
+
+/*
+37. コメントの活発な作品ランキング
+コメント数が多い作品をランキングし、ユーザーがコミュニティでの活発な議論や交流が行われている作品を見つけやすくします。
+*/
+
+SELECT w.title, COUNT(c.comment_id) AS comment_count
+FROM works w
+JOIN chapters ch ON w.work_id = ch.work_id
+JOIN episodes e ON ch.chapter_id = e.chapter_id
+JOIN comments c ON e.episode_id = c.episode_id
+GROUP BY w.work_id
+ORDER BY comment_count DESC
+LIMIT 10; -- 上位10作品を取得
+
+/*
+38. 平均章ごとのコメント数ランキング
+各章ごとの平均コメント数が多い作品をランキングし、物語の展開や興味深いシーンがある箇所を示します。
+*/
+
+SELECT w.title, AVG(comment_count) AS avg_comments_per_chapter
+FROM works w
+JOIN chapters ch ON w.work_id = ch.work_id
+LEFT JOIN (
+    SELECT e.chapter_id, COUNT(c.comment_id) AS comment_count
+    FROM episodes e
+    JOIN comments c ON e.episode_id = c.episode_id
+    GROUP BY e.chapter_id
+) AS chapter_comments ON ch.chapter_id = chapter_comments.chapter_id
+GROUP BY w.work_id
+ORDER BY avg_comments_per_chapter DESC
+LIMIT 10; -- 上位10作品を取得
+
+/*
+39. ユーザーのフォロワー数の取得
+ユーザーごとのフォロワー数を取得し、ユーザーの影響力や人気度を示します。
+*/
+
+SELECT u.pen_name, COUNT(f.follow_to) AS follower_count
+FROM users u
+LEFT JOIN follows f ON u.user_id = f.follow_to
+GROUP BY u.user_id
+ORDER BY follower_count DESC
+LIMIT 10; -- 上位10ユーザーを取得
+
+/*
+40. 最新作品の取得
+最新の作品を取得し、ユーザーが最新のコンテンツをチェックできるようにします。
+*/
+
+SELECT title, created_at
+FROM works
+ORDER BY created_at DESC
+LIMIT 10; -- 最新の10作品を取得
+
+
+/*
+41. トップレビュアーの取得
+最も多くのレビューを行っているユーザーを取得し、信頼できるレビュアーやコンテンツの評価者を特定します。
+*/
+
+SELECT u.pen_name, COUNT(r.review_id) AS review_count
+FROM users u
+JOIN reviews r ON u.user_id = r.review_from
+GROUP BY u.user_id
+ORDER BY review_count DESC
+LIMIT 10; -- 上位10ユーザーを取得
+
+
+/*
+42. 作品の平均評価ランキング
+作品ごとの平均評価が高いものをランキングし、高品質なコンテンツをユーザーに紹介します。
+*/
+
+SELECT w.title, AVG(r.star_rate) AS avg_rating
+FROM works w
+JOIN reviews r ON w.work_id = r.work_id
+GROUP BY w.work_id
+ORDER BY avg_rating DESC
+LIMIT 10; -- 上位10作品を取得
+
+/*
+43. ユーザーの活動履歴の取得
+ユーザーが最近行った活動 (作品の投稿、コメント、レビューなど) を取得し、ユーザーの興味や行動傾向を把握します。
+*/
+
+SELECT u.pen_name, MAX(activity_time) AS last_activity_time
+FROM (
+    SELECT user_id, MAX(created_at) AS activity_time
+    FROM (
+        SELECT user_id, created_at FROM works
+        UNION ALL
+        SELECT comment_from AS user_id, created_at FROM comments
+        UNION ALL
+        SELECT review_from AS user_id, created_at FROM reviews
+    ) AS all_activities
+    GROUP BY user_id
+) AS user_activities
+JOIN users u ON user_activities.user_id = u.user_id
+GROUP BY u.user_id
+ORDER BY last_activity_time DESC
+LIMIT 10; -- 上位10ユーザーの最新の活動を取得
+
+/*
+44. 最も長い作品の取得
+テキストの長さが最も長い作品を取得し、長編作品や大規模なストーリーを探すユーザーに役立ちます。
+*/
+
+SELECT title, text_length
+FROM works
+ORDER BY text_length DESC
+LIMIT 1; -- 最も長い作品を取得
+
 
 -- 一括更新バッチ
 
 /*
-36. 作品のtotal_starとtext_lengthを一括更新
+45. 作品のtotal_starとtext_lengthを一括更新
 このSQLは、エピソードごとの作品のtotal_starとtext_lengthの合計を計算し、それらの合計値をworksテーブルの対応するカラムに一括更新します。
 */
 UPDATE works w
@@ -296,7 +486,7 @@ SET w.total_star = e.total_star,
     w.text_length = e.total_text_length;
 
 /*
-37. ユーザーごとのフォロワー数を一括更新
+46. ユーザーごとのフォロワー数を一括更新
 このSQLは、フォローされたユーザーごとのフォロワー数を一括で計算し、それをusersテーブルのfollower_countカラムに一括更新します。
 */
 UPDATE users u
@@ -309,7 +499,7 @@ SET u.follower_count = f.follower_count;
 
 
 /*
-38. タグごとの作品数を一括更新
+47. タグごとの作品数を一括更新
 このSQLは、各タグが関連付けられた作品の数を一括で計算し、それをms_tagsテーブルのwork_countカラムに一括更新します。
 */
 UPDATE ms_tags t

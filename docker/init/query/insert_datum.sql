@@ -17,7 +17,7 @@ SELECT
 FROM
     users
 LIMIT
-    1000;
+    3000;
 
 
 -- notifications
@@ -35,7 +35,7 @@ FROM
 ORDER BY
     RAND()
 LIMIT
-    1000;
+    3000;
 
 /*
 作品系
@@ -56,7 +56,7 @@ FROM
 ORDER BY 
 	RAND()
 LIMIT 
-	1000;
+	3000;
 
 
 -- chapters
@@ -72,7 +72,7 @@ FROM
 ORDER BY 
     RAND()
 LIMIT 
-    1000;
+    9000;
 
 -- episodes
 INSERT INTO episodes (chapter_id, status, body_text, text_length, created_at, create_user_id)
@@ -88,7 +88,7 @@ FROM
 ORDER BY 
     RAND()
 LIMIT 
-    1000;
+    27000;
 
 
 -- comments
@@ -129,7 +129,7 @@ FROM
 ORDER BY 
     RAND()
 LIMIT 
-    500;
+    1500;
 
 
 -- comments
@@ -170,7 +170,7 @@ FROM
 ORDER BY 
     RAND()
 LIMIT 
-    500;
+    1500;
 
 
 -- reviews
@@ -209,5 +209,5 @@ FROM
 ORDER BY 
     RAND()
 LIMIT 
-    1000;
+    5000;
 
