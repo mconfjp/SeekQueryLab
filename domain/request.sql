@@ -310,7 +310,6 @@ LIMIT 10; -- 上位10作品を取得
 /*
 33. ユーザーごとのお気に入りランキングクエリ:
 */
-
 SELECT u.pen_name, COUNT(f.work_id) AS favorite_count
 FROM users u
 JOIN favorites f ON u.user_id = f.user_id
@@ -369,7 +368,7 @@ LIMIT 10; -- 上位10アクティブユーザーを取得
 SELECT w.title, COUNT(c.comment_id) AS comment_count
 FROM works w
 JOIN chapters ch ON w.work_id = ch.work_id
-JOIN episodes e ON ch.chapter_id = e.chapter_id
+JOIN episodes e ON ch.chapter_id = e.chapter_id and e.status = 1
 JOIN comments c ON e.episode_id = c.episode_id
 GROUP BY w.work_id
 ORDER BY comment_count DESC

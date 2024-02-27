@@ -165,7 +165,7 @@ PRIMARY KEY (`chapter_id`),
 CREATE TABLE `episodes` (
     `episode_id` int unsigned NOT NULL AUTO_INCREMENT,
     `chapter_id` int unsigned NOT NULL,
-    `status` int NOT NULL,
+    `status` int NOT NULL, -- 投稿済み, 下書き
     `body_text` varchar(15000) COLLATE utf8mb4_bin DEFAULT NULL,
     `text_length` int NOT NULL,
     `created_at` datetime DEFAULT NULL,

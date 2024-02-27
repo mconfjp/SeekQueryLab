@@ -22,7 +22,7 @@ UPDATE
 SET 
     pen_name = SUBSTRING(MD5(RAND()) FROM 1 FOR FLOOR(RAND() * 10)), 
     hashed_password = SUBSTRING(MD5(RAND()) FROM 1 FOR FLOOR(RAND() * 32)),
-    created_at = ADDTIME(CONCAT_WS(' ','2020-01-01' + INTERVAL RAND() * 180 DAY, '00:00:00'), SEC_TO_TIME(FLOOR(0 + (RAND() * 86401)))),
+    created_at = ADDTIME(CONCAT_WS(' ','2023-06-01' + INTERVAL RAND() * 180 DAY, '00:00:00'), SEC_TO_TIME(FLOOR(0 + (RAND() * 86401)))),
     updated_at = NULL,
     deleted_at = NULL,
     create_user_id = 1,
