@@ -365,14 +365,28 @@ LIMIT 10; -- 上位10アクティブユーザーを取得
 コメント数が多い作品をランキングし、ユーザーがコミュニティでの活発な議論や交流が行われている作品を見つけやすくします。
 */
 
-SELECT w.title, COUNT(c.comment_id) AS comment_count
-FROM works w
-JOIN chapters ch ON w.work_id = ch.work_id
-JOIN episodes e ON ch.chapter_id = e.chapter_id and e.status = 1
-JOIN comments c ON e.episode_id = c.episode_id
-GROUP BY w.work_id
-ORDER BY comment_count DESC
-LIMIT 10; -- 上位10作品を取得
+SELECT
+    w.title,
+    COUNT(c.comment_id) AS comment_count
+FROM
+    works w
+    JOIN
+        chapters ch
+    ON  w.work_id = ch.work_id
+    JOIN
+        episodes e
+    ON  ch.chapter_id = e.chapter_id
+    JOIN
+        comments c
+    ON  e.episode_id = c.episode_id
+WHERE
+    e.status = 0
+GROUP BY
+    w.work_id
+ORDER BY
+    comment_count DESC
+LIMIT 10
+;
 
 /*
 38. 平均章ごとのコメント数ランキング
