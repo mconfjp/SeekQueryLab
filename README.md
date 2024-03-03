@@ -46,3 +46,8 @@ SeekQueryLab: SQLは、クエリチューニングの強力な学習ツールで
     - [クエリチューニングを簡単に試せる環境「SeekQueryLab」を作ったよ - Zenn](https://zenn.dev/levtech/articles/8bb56f30c2edd6)
 - リポジトリの更新ログはこちら
     - [逆クエリチューニングのログ（高速なクエリを重くする） - Zenn](https://zenn.dev/mconfjp/scraps/4e55b5733e04f0)
+- チューニングするにあたって参考になる書籍やWebページ
+    - [データベースを勉強したいあなたに送る技術書17冊(+11冊1講義7link)](https://zenn.dev/levtech/articles/9ab9eea13a826d)
+        - この記事のSQL本やチューニングの節で挙げられている書籍がおすすめ
+    - [日本PostgreSQLユーザー会のYoutube動画](https://www.youtube.com/@postgresql5098)
+        - いろいろチューニング関連の動画があってどれも良いのでおすすめ
