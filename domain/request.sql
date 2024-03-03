@@ -1,6 +1,13 @@
 /**
 システムで利用されるSQLを記述
-適当に書いていくので、これのチューニングをする。なおinsertやupdateもあるが、そういうのは適宜無視して欲しい。
+
+□説明
+こちらに記載のサンプルクエリを使ってチューニングができます。
+としたかったんですが大体は速く動くので、意図的にチューニングできるようにしたクエリは以下です。（順次追加予定）
+・request.sql内のもの
+35, 37
+・docker/init/query/insert_datum.sql
+こちらのデータ生成用クエリは大体めちゃくちゃ重たいのでチューニング可能
 */
 
 
@@ -335,12 +342,12 @@ LIMIT 10; -- 各カテゴリごとに上位10作品を取得
 
 /*
 35. 人気タグのランキング
-サイト上で最も人気のあるタグをランキング化し、ユーザーが人気のあるトピックやジャンルを把握できるようにします。
+この半年でサイト上で最も人気のあるタグをランキング化し、ユーザーが人気のあるトピックやジャンルを把握できるようにします。
 */
 
-SELECT t.tag_name, COUNT(wt.work_id) AS tag_count
+SELECT t.tag_name, COUNT(wt.created_at) AS tag_count
 FROM ms_tags t
-JOIN work_tags wt ON t.tag_id = wt.tag_id
+JOIN work_tags wt ON t.tag_id = wt.tag_id and wt.created_at >= DATE_SUB(CURRENT_DATE(), INTERVAL 180 DAY)
 GROUP BY t.tag_id
 ORDER BY tag_count DESC
 LIMIT 10; -- 上位10タグを取得
