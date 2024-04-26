@@ -40,6 +40,7 @@ CREATE TABLE `users` (
     `user_id` int unsigned NOT NULL AUTO_INCREMENT,
     `pen_name` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL,
     `hashed_password` varchar(64) COLLATE utf8mb4_bin DEFAULT NULL,
+    `follower_num` int unsigned DEFAULT NULL,
     `created_at` datetime DEFAULT NULL,
     `updated_at` datetime DEFAULT NULL,
     `deleted_at` datetime DEFAULT NULL,
